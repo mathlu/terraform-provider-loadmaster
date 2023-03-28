@@ -1,45 +1,44 @@
 package loadmaster
 
 import (
-        "context"
+	"context"
 
-        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	lmclient "github.com/mathlu/loadmaster-go-client"
 )
-
 
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"server": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_SERVER", nil),
-				Description: "Loadmaster server IP address.",
-			},
-			"username": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_USERNAME", nil),
-				Description: "User to authenticate with Loadmaster server.",
-			},
-			"password": {
+			"server": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_PASSWORD", nil),
-				Description: "Password to authenticate with LOADMASTER server.",
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_SERVER", nil),
+			},
+			"api_token": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_TOKEN", nil),
 			},
 		},
-
-		ResourcesMap: map[string]*schema.Resource{
-		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"loadmaster_vs": dataSourceVs(),
+		},
+		ResourcesMap: map[string]*schema.Resource{
+			"loadmaster_vs": resourceVs(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+	server := d.Get("server").(string)
+	api_token := d.Get("api_token").(string)
 
-  return nil, diag.Diagnostics{diag.Diagnostic{Summary: ""}}
+	var diags diag.Diagnostics
+
+	c := lmclient.NewClient(api_token, server)
+	return c, diags
 }

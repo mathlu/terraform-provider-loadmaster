@@ -31,11 +31,7 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("LOADMASTER_SERVER must be set for acceptance tests")
 	}
 
-	if v := os.Getenv("LOADMASTER_USERNAME"); v == "" {
-		t.Fatal("LOADMASTER_USERNAME must be set for acceptance tests")
-	}
-
-	if v := os.Getenv("LOADMASTER_PASSWORD"); v == "" {
-		t.Fatal("LOADMASTER_PASSWORD must be set for acceptance tests")
+	if v := os.Getenv("LOADMASTER_API_KEY"); v == "" {
+                t.Fatal("LOADMASTER_API_KEY must be set for acceptance tests")
 	}
 }
