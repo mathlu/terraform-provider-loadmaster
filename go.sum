@@ -86,6 +86,10 @@ github.com/mathlu/loadmaster-go-client v0.0.0-20230328151738-f1f243d26a6a h1:78M
 github.com/mathlu/loadmaster-go-client v0.0.0-20230328151738-f1f243d26a6a/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
 github.com/mathlu/loadmaster-go-client v0.0.0-20230328153728-47b12a9d7e3f h1:I1UlXysn8ITM+/14R/rHwhNnrTXUL/qqrQf5U4opb24=
 github.com/mathlu/loadmaster-go-client v0.0.0-20230328153728-47b12a9d7e3f/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230329131733-ded5c5d34a64 h1:9GdSLTs1hNDI5KXN0N4PE7Ng+xNWDwWg8Gt314x7+aM=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230329131733-ded5c5d34a64/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230329133042-e5cae6b60dcd h1:0G8PjR4QdeI6swyYu2aNDA59SiOjXXU6pcFfudeCTzY=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230329133042-e5cae6b60dcd/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-colorable v0.1.12 h1:jF+Du6AlPIjs2BiUiQlKOX0rt3SujHxPnksPKZbaA40=
 github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb520KVy5xxl4=

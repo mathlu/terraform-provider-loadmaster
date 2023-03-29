@@ -28,6 +28,19 @@ func resourceVs() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"nickname": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"layer": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"enable": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+			},
 		},
 	}
 }
@@ -39,6 +52,8 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		Address:  d.Get("address").(string),
 		Protocol: d.Get("protocol").(string),
 		Port:     d.Get("port").(string),
+		NickName: d.Get("nickname").(string),
+		Enable:   d.Get("enable").(bool),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -66,19 +81,25 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("nickname", vc.NickName)
 	d.Set("port", vc.Port)
 	d.Set("protocol", vc.Protocol)
+	d.Set("layer", vc.Layer)
+	d.Set("enable", vc.Enable)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	c := m.(*lmclient.Client)
+	i, _ := strconv.Atoi(d.Id())
 
-	index := d.Id()
-	address := d.Get("address").(string)
-	protocol := d.Get("protocol").(string)
-	port := d.Get("port").(string)
+	vs := &lmclient.Vs{
+		Index:    i,
+		Address:  d.Get("address").(string),
+		Protocol: d.Get("protocol").(string),
+		Port:     d.Get("port").(string),
+		NickName: d.Get("nickname").(string),
+		Enable:   d.Get("enable").(bool),
+	}
 
-	i, _ := strconv.Atoi(index)
-	_, err := c.ModifyVs(i, address, protocol, port)
+	_, err := c.ModifyVs(vs)
 	if err != nil {
 		return diag.FromErr(err)
 	}
