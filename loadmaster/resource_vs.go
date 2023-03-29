@@ -2,6 +2,7 @@ package loadmaster
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -41,11 +42,27 @@ func resourceVs() *schema.Resource {
 				Optional: true,
 				Default:  true,
 			},
+			"type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "gen",
+			},
+			"force_l4": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"force_l7": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 		},
 	}
 }
 
 func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	if d.Get("force_l4").(bool) && d.Get("force_l7").(bool) {
+		return diag.FromErr(fmt.Errorf("force_l4 and force_l7 must not both be true"))
+	}
 	c := m.(*lmclient.Client)
 
 	vs := &lmclient.Vs{
@@ -54,6 +71,9 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		Port:     d.Get("port").(string),
 		NickName: d.Get("nickname").(string),
 		Enable:   d.Get("enable").(bool),
+		Type:     d.Get("type").(string),
+		ForceL4:  d.Get("force_l4").(bool),
+		ForceL7:  d.Get("force_l7").(bool),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -67,6 +87,7 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 }
 func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
+
 	c := m.(*lmclient.Client)
 
 	id := d.Id()
@@ -83,10 +104,16 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("protocol", vc.Protocol)
 	d.Set("layer", vc.Layer)
 	d.Set("enable", vc.Enable)
+	d.Set("type", vc.Type)
+	d.Set("force_l4", vc.ForceL4)
+	d.Set("force_l7", vc.ForceL7)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
+	if d.Get("force_l4").(bool) && d.Get("force_l7").(bool) {
+		return diag.FromErr(fmt.Errorf("force_l4 and force_l7 must not both be true"))
+	}
 	c := m.(*lmclient.Client)
 	i, _ := strconv.Atoi(d.Id())
 
@@ -97,6 +124,9 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		Port:     d.Get("port").(string),
 		NickName: d.Get("nickname").(string),
 		Enable:   d.Get("enable").(bool),
+		Type:     d.Get("type").(string),
+		ForceL4:  d.Get("force_l4").(bool),
+		ForceL7:  d.Get("force_l7").(bool),
 	}
 
 	_, err := c.ModifyVs(vs)
