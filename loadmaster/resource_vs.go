@@ -25,27 +25,41 @@ func resourceVs() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"protocol": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+			"layer": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"nickname": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-			},
-			"layer": &schema.Schema{
-				Type:     schema.TypeInt,
-				Computed: true,
 			},
 			"enable": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  true,
 			},
-			"type": &schema.Schema{
-				Type:     schema.TypeString,
+			"sslreverse": &schema.Schema{
+				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  "gen",
+			},
+			"sslreencrypt": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"interceptmode": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"intercept": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"interceptopts": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"force_l4": &schema.Schema{
 				Type:     schema.TypeBool,
@@ -54,6 +68,15 @@ func resourceVs() *schema.Resource {
 			"force_l7": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
+			},
+			"type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "gen",
+			},
+			"protocol": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
 			},
 		},
 	}
@@ -65,15 +88,26 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 	c := m.(*lmclient.Client)
 
+	interceptoptsRaw := d.Get("interceptopts").([]interface{})
+	interceptopts := make([]string, len(interceptoptsRaw))
+	for io, raw := range interceptoptsRaw {
+		interceptopts[io] = raw.(string)
+	}
+
 	vs := &lmclient.Vs{
-		Address:  d.Get("address").(string),
-		Protocol: d.Get("protocol").(string),
-		Port:     d.Get("port").(string),
-		NickName: d.Get("nickname").(string),
-		Enable:   d.Get("enable").(bool),
-		Type:     d.Get("type").(string),
-		ForceL4:  d.Get("force_l4").(bool),
-		ForceL7:  d.Get("force_l7").(bool),
+		Address:       d.Get("address").(string),
+		Port:          d.Get("port").(string),
+		NickName:      d.Get("nickname").(string),
+		Enable:        d.Get("enable").(bool),
+		SSLReverse:    d.Get("sslreverse").(bool),
+		SSLReencrypt:  d.Get("sslreencrypt").(bool),
+		InterceptMode: d.Get("interceptmode").(int),
+		Intercept:     d.Get("intercept").(bool),
+		InterceptOpts: interceptopts,
+		ForceL4:       d.Get("force_l4").(bool),
+		ForceL7:       d.Get("force_l7").(bool),
+		Type:          d.Get("type").(string),
+		Protocol:      d.Get("protocol").(string),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -99,14 +133,19 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 
 	//d.SetId(strconv.Itoa(vc.Index))
 	d.Set("address", vc.Address)
-	d.Set("nickname", vc.NickName)
 	d.Set("port", vc.Port)
-	d.Set("protocol", vc.Protocol)
 	d.Set("layer", vc.Layer)
+	d.Set("nickname", vc.NickName)
 	d.Set("enable", vc.Enable)
-	d.Set("type", vc.Type)
+	d.Set("sslreverse", vc.SSLReverse)
+	d.Set("sslreencrypt", vc.SSLReencrypt)
+	d.Set("interceptmode", vc.InterceptMode)
+	d.Set("intercept", vc.Intercept)
+	d.Set("interceptopts", vc.InterceptOpts)
 	d.Set("force_l4", vc.ForceL4)
 	d.Set("force_l7", vc.ForceL7)
+	d.Set("type", vc.Type)
+	d.Set("protocol", vc.Protocol)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -117,16 +156,26 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 	c := m.(*lmclient.Client)
 	i, _ := strconv.Atoi(d.Id())
 
+	interceptoptsRaw := d.Get("interceptopts").([]interface{})
+	interceptopts := make([]string, len(interceptoptsRaw))
+	for io, raw := range interceptoptsRaw {
+		interceptopts[io] = raw.(string)
+	}
 	vs := &lmclient.Vs{
-		Index:    i,
-		Address:  d.Get("address").(string),
-		Protocol: d.Get("protocol").(string),
-		Port:     d.Get("port").(string),
-		NickName: d.Get("nickname").(string),
-		Enable:   d.Get("enable").(bool),
-		Type:     d.Get("type").(string),
-		ForceL4:  d.Get("force_l4").(bool),
-		ForceL7:  d.Get("force_l7").(bool),
+		Index:         i,
+		Address:       d.Get("address").(string),
+		Port:          d.Get("port").(string),
+		NickName:      d.Get("nickname").(string),
+		Enable:        d.Get("enable").(bool),
+		SSLReverse:    d.Get("sslreverse").(bool),
+		SSLReencrypt:  d.Get("sslreencrypt").(bool),
+		InterceptMode: d.Get("interceptmode").(int),
+		Intercept:     d.Get("intercept").(bool),
+		InterceptOpts: interceptopts,
+		ForceL4:       d.Get("force_l4").(bool),
+		ForceL7:       d.Get("force_l7").(bool),
+		Type:          d.Get("type").(string),
+		Protocol:      d.Get("protocol").(string),
 	}
 
 	_, err := c.ModifyVs(vs)

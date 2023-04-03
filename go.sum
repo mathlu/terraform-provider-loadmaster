@@ -82,6 +82,10 @@ github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348/go.mod h1:B69LE
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
 github.com/mathlu/loadmaster-go-client v0.0.0-20230329133042-e5cae6b60dcd h1:0G8PjR4QdeI6swyYu2aNDA59SiOjXXU6pcFfudeCTzY=
 github.com/mathlu/loadmaster-go-client v0.0.0-20230329133042-e5cae6b60dcd/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230401153609-6aee7a3f66d5 h1:RvQ0JRnUFdA2r16JaAcK1HENA6IFRrbgkrwC5nq5tGg=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230401153609-6aee7a3f66d5/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230401164413-b25b2c5e30dd h1:h46uwoFELKjdDRiuXpIfgUWUBNtdyQNQkHg97emHfig=
+github.com/mathlu/loadmaster-go-client v0.0.0-20230401164413-b25b2c5e30dd/go.mod h1:IiKsv65Pswjk6JS8KzxTxIHFJ+KuIxpuAlkeU4O4Xt4=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-colorable v0.1.12 h1:jF+Du6AlPIjs2BiUiQlKOX0rt3SujHxPnksPKZbaA40=
 github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb520KVy5xxl4=
