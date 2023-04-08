@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.25.0
-	github.com/mathlu/loadmaster-go-client v0.0.0-20230401164413-b25b2c5e30dd
+	github.com/mathlu/loadmaster-go-client v0.0.0-20230408161004-f09945e47749
 )
 
 require (
