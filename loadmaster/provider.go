@@ -28,6 +28,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"loadmaster_vs": resourceVs(),
+			"loadmaster_rs": resourceRs(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

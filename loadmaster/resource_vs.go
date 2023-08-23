@@ -226,7 +226,7 @@ func GetVsSchema() map[string]*schema.Schema {
 		},
 		"numberofrss": &schema.Schema{
 			Type:     schema.ValueType(schema.TypeInt),
-			Optional: true,
+			Computed: true,
 		},
 		"ocspverify": &schema.Schema{
 			Type:     schema.ValueType(schema.TypeBool),
