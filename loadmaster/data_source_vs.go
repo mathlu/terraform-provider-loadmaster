@@ -12,6 +12,7 @@ import (
 
 func dataSourceVs() *schema.Resource {
 	return &schema.Resource{
+		Description: "Use this data source to retreive information about an existing Virtual Service.",
 		ReadContext: dataSourceVsRead,
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
@@ -19,20 +20,24 @@ func dataSourceVs() *schema.Resource {
 				Required: true,
 			},
 			"address": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The IP address of the Virtual Service.",
 			},
 			"nickname": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The \"friendly\" name of the service.",
 			},
 			"port": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The port for the Virtual Service.",
 			},
 			"protocol": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The protocol used for the Virtual Service.",
 			},
 		},
 	}

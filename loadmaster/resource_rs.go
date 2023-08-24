@@ -11,27 +11,32 @@ import (
 
 func GetRsSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"status": &schema.Schema{
-			Type:     schema.ValueType(schema.TypeString),
-			Computed: true,
-		},
-		"vsindex": &schema.Schema{
-			Type:     schema.ValueType(schema.TypeInt),
-			Required: true,
+		"virtual_service_id": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeInt),
+			Required:    true,
+			Description: "Virtual Service index number.",
 		},
 		"address": &schema.Schema{
-			Type:     schema.ValueType(schema.TypeString),
-			Required: true,
+			Type:        schema.ValueType(schema.TypeString),
+			Required:    true,
+			Description: "The Real Server IP address.",
 		},
 		"port": &schema.Schema{
-			Type:     schema.ValueType(schema.TypeInt),
-			Required: true,
+			Type:        schema.ValueType(schema.TypeInt),
+			Required:    true,
+			Description: "The port on the Real Server to be used.",
+		},
+		"id": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Computed:    true,
+			Description: "The ID of this resource.",
 		},
 	}
 }
 
 func resourceRs() *schema.Resource {
 	return &schema.Resource{
+		Description:   "Provides a resource for Real Servers. Use this to create and manage Real Servers assigned to Virtual Services in the KEMP LoadMaster.",
 		CreateContext: resourceRsCreate,
 		ReadContext:   resourceRsRead,
 		UpdateContext: resourceRsUpdate,
@@ -46,7 +51,7 @@ func resourceRsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	rs := &lmclient.Rs{
 		Addr:    d.Get("address").(string),
 		Port:    d.Get("port").(int),
-		VSIndex: d.Get("vsindex").(int),
+		VSIndex: d.Get("virtual_service_id").(int),
 	}
 	rc, err := c.CreateRs(rs)
 
@@ -62,7 +67,7 @@ func resourceRsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 
 	c := m.(*lmclient.Client)
 
-	vsid := d.Get("vsindex").(int)
+	vsid := d.Get("virtual_service_id").(int)
 	id := d.Id()
 	i, _ := strconv.Atoi(id)
 	rc, err := c.GetRs(i, vsid)
@@ -73,7 +78,7 @@ func resourceRsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.SetId(strconv.Itoa(rc.RsIndex))
 	d.Set("address", rc.Addr)
 	d.Set("port", rc.Port)
-	d.Set("vsindex", rc.VSIndex)
+	d.Set("virtual_service_id", rc.VSIndex)
 	return diags
 }
 func resourceRsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -82,7 +87,7 @@ func resourceRsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	rs := &lmclient.Rs{
 		Rsi:     "!" + d.Id(),
-		VSIndex: d.Get("vsindex").(int),
+		VSIndex: d.Get("virtual_service_id").(int),
 		NewPort: strconv.Itoa(d.Get("port").(int)),
 		Addr:    d.Get("address").(string),
 	}
@@ -98,7 +103,7 @@ func resourceRsDelete(ctx context.Context, d *schema.ResourceData, m interface{}
 	var diags diag.Diagnostics
 	c := m.(*lmclient.Client)
 
-	vsid := d.Get("vsindex").(int)
+	vsid := d.Get("virtual_service_id").(int)
 	id := d.Id()
 	i, _ := strconv.Atoi(id)
 	_, err := c.DeleteRs(i, vsid)

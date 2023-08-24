@@ -16,19 +16,19 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_SERVER", nil),
 			},
-			"api_token": &schema.Schema{
+			"api_key": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_TOKEN", nil),
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_KEY", nil),
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"loadmaster_vs": dataSourceVs(),
+			"loadmaster_virtual_service": dataSourceVs(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"loadmaster_vs": resourceVs(),
-			"loadmaster_rs": resourceRs(),
+			"loadmaster_virtual_service": resourceVs(),
+			"loadmaster_real_server":     resourceRs(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
@@ -36,10 +36,10 @@ func Provider() *schema.Provider {
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	server := d.Get("server").(string)
-	api_token := d.Get("api_token").(string)
+	apikey := d.Get("api_key").(string)
 
 	var diags diag.Diagnostics
 
-	c := lmclient.NewClient(api_token, server)
+	c := lmclient.NewClient(apikey, server)
 	return c, diags
 }
