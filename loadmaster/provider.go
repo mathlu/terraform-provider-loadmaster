@@ -12,15 +12,24 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"server": &schema.Schema{
+				Description: "Address of the KEMP LoadMaster.",
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_SERVER", nil),
 			},
 			"api_key": &schema.Schema{
+				Description: "API Key for authentication.",
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_KEY", nil),
+			},
+			"api_version": &schema.Schema{
+				Description: "Use 1 for the old XML based API, 2 (default) for JSON.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_VERSION", 2),
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -35,11 +44,12 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	server := d.Get("server").(string)
+	server := "https://" + d.Get("server").(string)
 	apikey := d.Get("api_key").(string)
+	apiversion := d.Get("api_version").(int)
 
 	var diags diag.Diagnostics
 
-	c := lmclient.NewClient(apikey, server)
+	c := lmclient.NewClient(apikey, server, apiversion)
 	return c, diags
 }

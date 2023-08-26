@@ -69,7 +69,6 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		Address:  d.Get("address").(string),
 		Port:     d.Get("port").(string),
 		NickName: d.Get("nickname").(string),
-		Enable:   d.Get("enable").(bool),
 		Type:     d.Get("type").(string),
 		Protocol: d.Get("protocol").(string),
 	}
@@ -99,7 +98,6 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("address", vc.Address)
 	d.Set("port", vc.VSPort)
 	d.Set("nickname", vc.NickName)
-	d.Set("enable", vc.Enable)
 	d.Set("type", vc.Type)
 	d.Set("protocol", vc.Protocol)
 	return diags
@@ -116,7 +114,6 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		Address:  d.Get("address").(string),
 		VSPort:   d.Get("port").(string),
 		NickName: d.Get("nickname").(string),
-		Enable:   d.Get("enable").(bool),
 		Type:     d.Get("type").(string),
 		Protocol: d.Get("protocol").(string),
 	}
