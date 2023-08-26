@@ -95,11 +95,11 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	}
 
 	d.SetId(strconv.Itoa(vc.Index))
-	d.Set("address", vc.Address)
-	d.Set("port", vc.VSPort)
-	d.Set("nickname", vc.NickName)
-	d.Set("type", vc.Type)
-	d.Set("protocol", vc.Protocol)
+	_ = d.Set("address", vc.Address)
+	_ = d.Set("port", vc.VSPort)
+	_ = d.Set("nickname", vc.NickName)
+	_ = d.Set("type", vc.Type)
+	_ = d.Set("protocol", vc.Protocol)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

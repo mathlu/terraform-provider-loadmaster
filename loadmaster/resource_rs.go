@@ -76,9 +76,9 @@ func resourceRsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	}
 
 	d.SetId(strconv.Itoa(rc.RsIndex))
-	d.Set("address", rc.Addr)
-	d.Set("port", rc.Port)
-	d.Set("virtual_service_id", rc.VSIndex)
+	_ = d.Set("address", rc.Addr)
+	_ = d.Set("port", rc.Port)
+	_ = d.Set("virtual_service_id", rc.VSIndex)
 	return diags
 }
 func resourceRsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

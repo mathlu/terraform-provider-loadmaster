@@ -54,10 +54,10 @@ func dataSourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 
 	d.SetId(strconv.Itoa(vc.Index))
-	d.Set("address", vc.Address)
-	d.Set("nickname", vc.NickName)
-	d.Set("port", vc.Port)
-	d.Set("protocol", vc.Protocol)
+	_ = d.Set("address", vc.Address)
+	_ = d.Set("nickname", vc.NickName)
+	_ = d.Set("port", vc.Port)
+	_ = d.Set("protocol", vc.Protocol)
 	return nil
 
 }
