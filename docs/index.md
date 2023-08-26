@@ -14,8 +14,11 @@ description: |-
 
 ```terraform
 provider "loadmaster" {
-  server  = "https://192.168.1.10"
+  server  = "192.168.1.10"
   api_key = "<SECRET API KEY>"
+
+  # 1 = XML 2 = JSON (firmware version >=7.2.50)
+  api_version = 2
 }
 ```
 
@@ -24,5 +27,6 @@ provider "loadmaster" {
 
 ### Optional
 
-- `api_key` (String, Sensitive)
-- `server` (String)
+- `api_key` (String, Sensitive) API Key for authentication.
+- `api_version` (Number, Sensitive) Use 1 for the old XML based API, 2 (default) for JSON.
+- `server` (String) Address of the KEMP LoadMaster.
