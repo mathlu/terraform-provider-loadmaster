@@ -37,6 +37,12 @@ func GetVsSchema() map[string]*schema.Schema {
 			Required:    true,
 			Description: "The protocol to be used for the Virtual Service.",
 		},
+		"layer": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeInt),
+			Optional:    true,
+			Description: "Network Layer for the service to run at (7 or 4).",
+			Default:     7,
+		},
 		"type": &schema.Schema{
 			Type:        schema.ValueType(schema.TypeString),
 			Optional:    true,
@@ -71,6 +77,8 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		NickName: d.Get("nickname").(string),
 		Type:     d.Get("type").(string),
 		Protocol: d.Get("protocol").(string),
+		Enable:   d.Get("enable").(bool),
+		Layer:    d.Get("layer").(int),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -100,6 +108,8 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	_ = d.Set("nickname", vc.NickName)
 	_ = d.Set("type", vc.Type)
 	_ = d.Set("protocol", vc.Protocol)
+	_ = d.Set("enable", vc.Enable)
+	_ = d.Set("layer", vc.Layer)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -116,6 +126,8 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		NickName: d.Get("nickname").(string),
 		Type:     d.Get("type").(string),
 		Protocol: d.Get("protocol").(string),
+		Enable:   d.Get("enable").(bool),
+		Layer:    d.Get("layer").(int),
 	}
 
 	_, err := c.ModifyVs(vs)

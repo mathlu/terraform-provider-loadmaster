@@ -34,6 +34,7 @@ resource "loadmaster_virtual_service" "foo" {
 ### Optional
 
 - `enable` (Boolean) Enable or disable the virtual server.
+- `layer` (Number) Network Layer for the service to run at (7 or 4).
 - `nickname` (String) Specifies the "friendly" name of the service.
 - `type` (String) Specifies the type of service being load balanced (gen, http, http2, ts, tls, or log).
 
