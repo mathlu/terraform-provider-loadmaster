@@ -17,6 +17,16 @@ func TestAccResourceVs(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
 						"loadmaster_virtual_service.foo", "nickname", "bar"),
+					resource.TestCheckResourceAttr(
+						"loadmaster_virtual_service.foo", "defaultgw", "192.168.1.1"),
+					resource.TestCheckResourceAttr(
+						"loadmaster_virtual_service.foo", "port", "8080"),
+					resource.TestCheckResourceAttr(
+						"loadmaster_virtual_service.foo", "type", "gen"),
+					resource.TestCheckResourceAttr(
+						"loadmaster_virtual_service.foo", "address", "192.168.1.10"),
+					resource.TestCheckResourceAttr(
+						"loadmaster_virtual_service.foo", "protocol", "tcp"),
 				),
 			},
 		},
@@ -25,10 +35,11 @@ func TestAccResourceVs(t *testing.T) {
 
 const testAccResourceVs = `
 resource "loadmaster_virtual_service" "foo" {
-  address  = "192.168.1.10"
-  protocol = "tcp"
-  port     = "8080"
-  nickname = "bar"
-  type     = "gen"
+  address   = "192.168.1.10"
+  protocol  = "tcp"
+  port      = "8080"
+  nickname  = "bar"
+  type      = "gen"
+  defaultgw = "192.168.1.1"
 }
 `

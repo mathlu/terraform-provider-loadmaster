@@ -33,6 +33,7 @@ resource "loadmaster_virtual_service" "foo" {
 
 ### Optional
 
+- `defaultgw` (String) Specify the Virtual Service-specific default gateway to be used and to send responses back to clients. If not set, the global default gateway will be used
 - `enable` (Boolean) Enable or disable the virtual server.
 - `layer` (Number) Network Layer for the service to run at (7 or 4).
 - `nickname` (String) Specifies the "friendly" name of the service.

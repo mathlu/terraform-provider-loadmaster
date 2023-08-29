@@ -49,6 +49,11 @@ func GetVsSchema() map[string]*schema.Schema {
 			Default:     "gen",
 			Description: "Specifies the type of service being load balanced (gen, http, http2, ts, tls, or log).",
 		},
+		"defaultgw": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Optional:    true,
+			Description: "Specify the Virtual Service-specific default gateway to be used and to send responses back to clients. If not set, the global default gateway will be used",
+		},
 		"id": &schema.Schema{
 			Type:        schema.ValueType(schema.TypeString),
 			Computed:    true,
@@ -72,13 +77,14 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	c := m.(*lmclient.Client)
 
 	vs := &lmclient.Vs{
-		Address:  d.Get("address").(string),
-		Port:     d.Get("port").(string),
-		NickName: d.Get("nickname").(string),
-		Type:     d.Get("type").(string),
-		Protocol: d.Get("protocol").(string),
-		Enable:   d.Get("enable").(bool),
-		Layer:    d.Get("layer").(int),
+		Address:   d.Get("address").(string),
+		Port:      d.Get("port").(string),
+		NickName:  d.Get("nickname").(string),
+		Type:      d.Get("type").(string),
+		Protocol:  d.Get("protocol").(string),
+		Enable:    d.Get("enable").(bool),
+		Layer:     d.Get("layer").(int),
+		DefaultGW: d.Get("defaultgw").(string),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -110,6 +116,7 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	_ = d.Set("protocol", vc.Protocol)
 	_ = d.Set("enable", vc.Enable)
 	_ = d.Set("layer", vc.Layer)
+	_ = d.Set("defaultgw", vc.DefaultGW)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -119,15 +126,16 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	oldport, _ := d.GetChange("port")
 	vs := &lmclient.Vs{
-		Index:    i,
-		Port:     oldport.(string),
-		Address:  d.Get("address").(string),
-		VSPort:   d.Get("port").(string),
-		NickName: d.Get("nickname").(string),
-		Type:     d.Get("type").(string),
-		Protocol: d.Get("protocol").(string),
-		Enable:   d.Get("enable").(bool),
-		Layer:    d.Get("layer").(int),
+		Index:     i,
+		Port:      oldport.(string),
+		Address:   d.Get("address").(string),
+		VSPort:    d.Get("port").(string),
+		NickName:  d.Get("nickname").(string),
+		Type:      d.Get("type").(string),
+		Protocol:  d.Get("protocol").(string),
+		Enable:    d.Get("enable").(bool),
+		Layer:     d.Get("layer").(int),
+		DefaultGW: d.Get("defaultgw").(string),
 	}
 
 	_, err := c.ModifyVs(vs)
