@@ -22,13 +22,26 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_KEY", nil),
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_KEY", ""),
+			},
+			"api_user": &schema.Schema{
+				Description: "Username for KEMP LoadMaster API operations.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_USER", ""),
+			},
+			"api_pass": &schema.Schema{
+				Description: "Password for KEMP LoadMaster API operations..",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_PASS", ""),
 			},
 			"api_version": &schema.Schema{
 				Description: "Use 1 for the old XML based API, 2 (default) for JSON.",
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("LOADMASTER_API_VERSION", 2),
 			},
 		},
@@ -46,10 +59,12 @@ func Provider() *schema.Provider {
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	server := "https://" + d.Get("server").(string)
 	apikey := d.Get("api_key").(string)
+	apiuser := d.Get("api_user").(string)
+	apipass := d.Get("api_pass").(string)
 	apiversion := d.Get("api_version").(int)
 
 	var diags diag.Diagnostics
 
-	c := lmclient.NewClient(apikey, server, apiversion)
+	c := lmclient.NewClient(apikey, apiuser, apipass, server, apiversion)
 	return c, diags
 }
