@@ -6,7 +6,7 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
 	github.com/hashicorp/terraform-plugin-testing v1.4.0
-	github.com/mathlu/loadmaster-go-client v0.0.0-20230829101104-8500e0a90a75
+	github.com/mathlu/loadmaster-go-client v0.0.0-20230829104148-a781aed7b413
 )
 
 require (
