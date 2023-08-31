@@ -72,6 +72,7 @@ func resourceRsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	i, _ := strconv.Atoi(id)
 	rc, err := c.GetRs(i, vsid)
 	if err != nil {
+                d.SetId("")
 		return diag.FromErr(err)
 	}
 

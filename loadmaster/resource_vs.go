@@ -49,6 +49,26 @@ func GetVsSchema() map[string]*schema.Schema {
 			Default:     "gen",
 			Description: "Specifies the type of service being load balanced (gen, http, http2, ts, tls, or log).",
 		},
+		"checktype": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Optional:    true,
+			Description: "Specify which protocol is to be used to check the health of the Real Server. (icmp, https, http, tcp, smtp, nntp, ftp, telnet, pop3, imap, rdp, bdata, ldap or none).",
+		},
+		"checkurl": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Optional:    true,
+			Description: "When checktype is set to http or https - by default, the health checker tries to access the URL / to determine if the machine is available. A different URL can be set in the checkurl parameter. When the checktype is set to bdata: Specify a hexadecimal string to send to the Real Server.",
+		},
+		"checkcodes": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Optional:    true,
+			Description: "A space-separated list of HTTP status codes that should be treated as successful when received from the Real Server",
+		},
+		"checkport": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Optional:    true,
+			Description: "The port to be checked. If a port is not specified, the Real Server port is used. Specify 0 to unset CheckPort.",
+		},
 		"id": &schema.Schema{
 			Type:        schema.ValueType(schema.TypeString),
 			Computed:    true,
@@ -72,13 +92,17 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	c := m.(*lmclient.Client)
 
 	vs := &lmclient.Vs{
-		Address:  d.Get("address").(string),
-		Port:     d.Get("port").(string),
-		NickName: d.Get("nickname").(string),
-		Type:     d.Get("type").(string),
-		Protocol: d.Get("protocol").(string),
-		Enable:   d.Get("enable").(bool),
-		Layer:    d.Get("layer").(int),
+		Address:    d.Get("address").(string),
+		Port:       d.Get("port").(string),
+		NickName:   d.Get("nickname").(string),
+		Type:       d.Get("type").(string),
+		Protocol:   d.Get("protocol").(string),
+		Enable:     d.Get("enable").(bool),
+		Layer:      d.Get("layer").(int),
+		CheckType:  d.Get("checktype").(string),
+		CheckUrl:   d.Get("checkurl").(string),
+		CheckCodes: d.Get("checkcodes").(string),
+		CheckPort:  d.Get("checkport").(string),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -99,6 +123,7 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	i, _ := strconv.Atoi(id)
 	vc, err := c.GetVs(i)
 	if err != nil {
+                d.SetId("")
 		return diag.FromErr(err)
 	}
 
@@ -110,6 +135,10 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	_ = d.Set("protocol", vc.Protocol)
 	_ = d.Set("enable", vc.Enable)
 	_ = d.Set("layer", vc.Layer)
+	_ = d.Set("checktype", vc.CheckType)
+	_ = d.Set("checkurl", vc.CheckUrl)
+	_ = d.Set("checkcodes", vc.CheckCodes)
+	_ = d.Set("checkport", vc.CheckPort)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -119,15 +148,19 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	oldport, _ := d.GetChange("port")
 	vs := &lmclient.Vs{
-		Index:    i,
-		Port:     oldport.(string),
-		Address:  d.Get("address").(string),
-		VSPort:   d.Get("port").(string),
-		NickName: d.Get("nickname").(string),
-		Type:     d.Get("type").(string),
-		Protocol: d.Get("protocol").(string),
-		Enable:   d.Get("enable").(bool),
-		Layer:    d.Get("layer").(int),
+		Index:      i,
+		Port:       oldport.(string),
+		Address:    d.Get("address").(string),
+		VSPort:     d.Get("port").(string),
+		NickName:   d.Get("nickname").(string),
+		Type:       d.Get("type").(string),
+		Protocol:   d.Get("protocol").(string),
+		Enable:     d.Get("enable").(bool),
+		Layer:      d.Get("layer").(int),
+		CheckType:  d.Get("checktype").(string),
+		CheckUrl:   d.Get("checkurl").(string),
+		CheckCodes: d.Get("checkcodes").(string),
+		CheckPort:  d.Get("checkport").(string),
 	}
 
 	_, err := c.ModifyVs(vs)
