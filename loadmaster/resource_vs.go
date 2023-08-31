@@ -68,6 +68,10 @@ func GetVsSchema() map[string]*schema.Schema {
 			Type:        schema.ValueType(schema.TypeString),
 			Optional:    true,
 			Description: "The port to be checked. If a port is not specified, the Real Server port is used. Specify 0 to unset CheckPort.",
+		"defaultgw": &schema.Schema{
+			Type:        schema.ValueType(schema.TypeString),
+			Optional:    true,
+			Description: "Specify the Virtual Service-specific default gateway to be used and to send responses back to clients. If not set, the global default gateway will be used",
 		},
 		"id": &schema.Schema{
 			Type:        schema.ValueType(schema.TypeString),
@@ -103,6 +107,7 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		CheckUrl:   d.Get("checkurl").(string),
 		CheckCodes: d.Get("checkcodes").(string),
 		CheckPort:  d.Get("checkport").(string),
+		DefaultGW: d.Get("defaultgw").(string),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -139,6 +144,7 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	_ = d.Set("checkurl", vc.CheckUrl)
 	_ = d.Set("checkcodes", vc.CheckCodes)
 	_ = d.Set("checkport", vc.CheckPort)
+	_ = d.Set("defaultgw", vc.DefaultGW)
 	return diags
 }
 func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -161,6 +167,7 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		CheckUrl:   d.Get("checkurl").(string),
 		CheckCodes: d.Get("checkcodes").(string),
 		CheckPort:  d.Get("checkport").(string),
+		DefaultGW: d.Get("defaultgw").(string),
 	}
 
 	_, err := c.ModifyVs(vs)

@@ -28,5 +28,7 @@ provider "loadmaster" {
 ### Optional
 
 - `api_key` (String, Sensitive) API Key for authentication.
-- `api_version` (Number, Sensitive) Use 1 for the old XML based API, 2 (default) for JSON.
+- `api_pass` (String, Sensitive) Password for KEMP LoadMaster API operations..
+- `api_user` (String, Sensitive) Username for KEMP LoadMaster API operations.
+- `api_version` (Number) Use 1 for the old XML based API, 2 (default) for JSON.
 - `server` (String) Address of the KEMP LoadMaster.
