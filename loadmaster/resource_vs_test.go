@@ -41,5 +41,6 @@ resource "loadmaster_virtual_service" "foo" {
   nickname  = "bar"
   type      = "gen"
   defaultgw = "192.168.1.1"
+  checktype = "tcp"
 }
 `

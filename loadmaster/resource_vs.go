@@ -2,6 +2,7 @@ package loadmaster
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -68,6 +69,7 @@ func GetVsSchema() map[string]*schema.Schema {
 			Type:        schema.ValueType(schema.TypeString),
 			Optional:    true,
 			Description: "The port to be checked. If a port is not specified, the Real Server port is used. Specify 0 to unset CheckPort.",
+			Default:     "0",
 		},
 		"defaultgw": &schema.Schema{
 			Type:        schema.ValueType(schema.TypeString),
@@ -128,8 +130,13 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	id := d.Id()
 	i, _ := strconv.Atoi(id)
 	vc, err := c.GetVs(i)
+
 	if err != nil {
-		d.SetId("")
+		if !d.IsNewResource() && err.Error() == "Code: 422 Message: Unknown VS" {
+			log.Printf("[WARN] Virtual Service (%s) not found, removing from state", d.Id())
+			d.SetId("")
+			return diags
+		}
 		return diag.FromErr(err)
 	}
 
@@ -188,6 +195,7 @@ func resourceVsDelete(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	d.SetId("")
 
 	return diags
 }

@@ -33,6 +33,10 @@ resource "loadmaster_virtual_service" "foo" {
 
 ### Optional
 
+- `checkcodes` (String) A space-separated list of HTTP status codes that should be treated as successful when received from the Real Server
+- `checkport` (String) The port to be checked. If a port is not specified, the Real Server port is used. Specify 0 to unset CheckPort.
+- `checktype` (String) Specify which protocol is to be used to check the health of the Real Server. (icmp, https, http, tcp, smtp, nntp, ftp, telnet, pop3, imap, rdp, bdata, ldap or none).
+- `checkurl` (String) When checktype is set to http or https - by default, the health checker tries to access the URL / to determine if the machine is available. A different URL can be set in the checkurl parameter. When the checktype is set to bdata: Specify a hexadecimal string to send to the Real Server.
 - `defaultgw` (String) Specify the Virtual Service-specific default gateway to be used and to send responses back to clients. If not set, the global default gateway will be used
 - `enable` (Boolean) Enable or disable the virtual server.
 - `layer` (Number) Network Layer for the service to run at (7 or 4).

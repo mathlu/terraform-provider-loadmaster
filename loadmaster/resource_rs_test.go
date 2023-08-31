@@ -25,11 +25,12 @@ func TestAccResourceRs(t *testing.T) {
 
 const testAccResourceRs = `
 resource "loadmaster_virtual_service" "foo" {
-  address  = "192.168.1.10"
-  protocol = "tcp"
-  port     = "8080"
-  nickname = "bar"
-  type     = "gen"
+  address   = "192.168.1.10"
+  protocol  = "tcp"
+  port      = "8080"
+  nickname  = "bar"
+  type      = "gen"
+  checktype = "tcp"
 }
 
 

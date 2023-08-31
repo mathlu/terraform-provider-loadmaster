@@ -2,6 +2,7 @@ package loadmaster
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -71,8 +72,13 @@ func resourceRsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	id := d.Id()
 	i, _ := strconv.Atoi(id)
 	rc, err := c.GetRs(i, vsid)
+
 	if err != nil {
-                d.SetId("")
+		if !d.IsNewResource() && err.Error() == "Code: 422 Message: Unknown RS" {
+			log.Printf("[WARN] Real Server (%s) not found, removing from state", d.Id())
+			d.SetId("")
+			return diags
+		}
 		return diag.FromErr(err)
 	}
 
@@ -111,6 +117,7 @@ func resourceRsDelete(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	d.SetId("")
 
 	return diags
 }
