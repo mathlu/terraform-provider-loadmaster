@@ -68,6 +68,7 @@ func GetVsSchema() map[string]*schema.Schema {
 			Type:        schema.ValueType(schema.TypeString),
 			Optional:    true,
 			Description: "The port to be checked. If a port is not specified, the Real Server port is used. Specify 0 to unset CheckPort.",
+		},
 		"defaultgw": &schema.Schema{
 			Type:        schema.ValueType(schema.TypeString),
 			Optional:    true,
@@ -107,7 +108,7 @@ func resourceVsCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		CheckUrl:   d.Get("checkurl").(string),
 		CheckCodes: d.Get("checkcodes").(string),
 		CheckPort:  d.Get("checkport").(string),
-		DefaultGW: d.Get("defaultgw").(string),
+		DefaultGW:  d.Get("defaultgw").(string),
 	}
 	vc, err := c.CreateVs(vs)
 
@@ -128,7 +129,7 @@ func resourceVsRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	i, _ := strconv.Atoi(id)
 	vc, err := c.GetVs(i)
 	if err != nil {
-                d.SetId("")
+		d.SetId("")
 		return diag.FromErr(err)
 	}
 
@@ -167,7 +168,7 @@ func resourceVsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		CheckUrl:   d.Get("checkurl").(string),
 		CheckCodes: d.Get("checkcodes").(string),
 		CheckPort:  d.Get("checkport").(string),
-		DefaultGW: d.Get("defaultgw").(string),
+		DefaultGW:  d.Get("defaultgw").(string),
 	}
 
 	_, err := c.ModifyVs(vs)
